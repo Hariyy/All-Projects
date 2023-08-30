@@ -1,0 +1,110 @@
+Below SQL code was used to generate 2 files for LOA use case.  One file contains all people on leave: s3://adl-core-sagemaker-studio/external/Hype/Hype_ML_demographics_2022_06_01_LOA_AC.csv
+
+The 2nd file contains 1M active people for the negative label: s3://adl-core-sagemaker-studio/external/Hype/Hype_ML_demographics_2022_06_01_LOA_ACTV_AC.csv
+----------------------------------------------------------------------
+LOA-
+Total Rows- 437150
+Distinct count of client ID- 234
+Distinct count of Person Internal Id- 416135
+---------------------------------------------------------------------
+Active-
+Total Rows- 13366537
+Distinct count of client ID- 288
+Distinct count of Person Internal Id- 8832489
+----------------------------------------------------------------------
+
+For LOA file:
+SELECT idm.platforminternalid as person_internal_id
+,client_id
+,udp_global_id
+,(2022 - CAST(SUBSTRING(birthdate,1,4) AS INT)) AS age
+,ppt.gender
+,ppt.marital_status
+,is_union
+,primary_language_code
+,country_description
+,ppt.state
+,ppt.platform_indicator_code
+,mapped_employment_status_code
+,mapped_employment_status_description
+,mapped_fullpart_code
+,mapped_fullpart_description
+,mapped_permanent_temporary_code
+,mapped_permanent_temporary_description
+,mapped_hourly_salary_code
+,mapped_hourly_salary_description
+,subsidiary_code
+,subsidiary_description
+,mapped_flex_status_code
+,mapped_flex_status_description
+,original_hire_date
+,rehire_date
+,is_rehire
+,termination_date
+,base_pay_regular_payrate_amount
+,base_pay_regular_frequency_code
+,base_pay_regular_frequency_description
+,base_pay_regular_expectedannualsalary
+,base_pay_regular_expectedannualsalary_range
+,annual_benefits_base_rate
+FROM edh_analytic_solutions_db.participant_integrated ppt
+JOIN edh_analytic_solutions_db.udp_person_idmapping idm
+ON ppt.udp_global_id = idm.globalpersonidentifier
+AND ppt.client_id = CAST(idm.normalizedclientid AS INT)
+where mapped_employment_status_code in (
+'LOA_WITH_PAY', 
+'LOA_NO_PAY', 
+'LTD', 
+'LOA - Unpaid Leave', 
+'STD', 
+'LOA_FM', 
+'LOA - Paid Leave', 
+'LOA - Unpaid w/ Benefits', 
+'LOA_WC', 
+'LOA_MLTR', 
+'LOA - STD', 
+'LOA - LTD', 
+'LOA - Workers Comp' 
+) 
+GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33
+ 
+For LOA/Active file:
+SELECT idm.platforminternalid as person_internal_id
+,client_id
+,udp_global_id
+,(2022 - CAST(SUBSTRING(birthdate,1,4) AS INT)) AS age
+,ppt.gender
+,ppt.marital_status
+,is_union
+,primary_language_code
+,country_description
+,ppt.state
+,ppt.platform_indicator_code
+,mapped_employment_status_code
+,mapped_employment_status_description
+,mapped_fullpart_code
+,mapped_fullpart_description
+,mapped_permanent_temporary_code
+,mapped_permanent_temporary_description
+,mapped_hourly_salary_code
+,mapped_hourly_salary_description
+,subsidiary_code
+,subsidiary_description
+,mapped_flex_status_code
+,mapped_flex_status_description
+,original_hire_date
+,rehire_date
+,is_rehire
+,termination_date
+,base_pay_regular_payrate_amount
+,base_pay_regular_frequency_code
+,base_pay_regular_frequency_description
+,base_pay_regular_expectedannualsalary
+,base_pay_regular_expectedannualsalary_range
+,annual_benefits_base_rate
+FROM edh_analytic_solutions_db.participant_integrated ppt
+JOIN edh_analytic_solutions_db.udp_person_idmapping idm
+ON ppt.udp_global_id = idm.globalpersonidentifier
+AND ppt.client_id = CAST(idm.normalizedclientid AS INT)
+where mapped_employment_status_code in ('ACTIVE', 'Active', 'Temporary') 
+GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33

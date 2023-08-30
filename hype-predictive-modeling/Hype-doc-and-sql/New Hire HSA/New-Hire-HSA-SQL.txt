@@ -1,0 +1,67 @@
+####################################################################################
+Query for TBA_4X, TBA_3X and CBA clients ----> YEAR 2022
+Expected numbers
++---------+-----------+--------+
+| n_rows  | n_clients | n_ppid |
++---------+-----------+--------+
+| 1046780 | 358       | 272465 |
++---------+-----------+--------+
+
+SELECT
+platform_id,
+client_id,
+client_name,
+client_industry,
+platform_person_internal_id,
+enrolled_option_description,
+enrolled_plan_cost,
+enrolled_annual_paycheck_deduction,
+person_age,
+person_gender_description,
+marital_status_description,
+person_expected_annual_base_salary,
+client_is_ysa,
+client_has_corporate_exchange,
+er_hsa_contribution_flag,
+client_hm_large_market_or_enterprise,
+number_of_people_covered,
+enrolled_er_annual_hsa_contribution,
+mapped_person_employment_status_standard_value,
+mapped_enrolled_coverage_category_standard_value,
+source_system,
+enrollment_suggestion_source,
+enrolled_option_brand_code,
+enrolled_option_description_group,
+mapped_activity_rollup_level_2,
+is_no_coverage_option,
+dwh_plan_brand_code,
+is_option_hsa_fixed,
+medical_enrolled_option_type,
+enrolled_ee_annual_hsa_contribution,
+ee_hsa_contribution_flag,
+activity_effective_begin_date,
+enrolled_person_plan_efbegdt,
+enrolled_person_plan_efenddt,
+enrolled_plan_year
+FROM edh_core_health_db.person_hm_choice_enrolled_integrated
+WHERE enrolled_plan_year='2022' AND platform_person_internal_id IN (SELECT DISTINCT platform_person_internal_id
+FROM edh_core_health_db.person_hm_choice_enrolled_integrated
+WHERE (source_system = 'TBA_4X' AND
+mapped_activity_rollup_level_2='New Hire Enrollment' AND
+is_no_coverage_option=0 AND
+dwh_plan_brand_code IN ('MDCL','MDCL-MDCR','RTEE-MDCL') AND
+is_option_hsa_fixed='HSA' AND
+medical_enrolled_option_type='HDHP' AND
+enrolled_plan_year='2022') OR
+(source_system = 'CBA' AND
+mapped_activity_rollup_level_2='Other Enrollment' AND
+is_no_coverage_option=0 AND
+dwh_plan_brand_code IN ('MDCL','MDCL-MDCR','RTEE-MDCL') AND
+is_option_hsa_fixed='HSA' AND
+medical_enrolled_option_type='HDHP' AND
+enrolled_plan_year='2022') OR
+(source_system='TBA_3X' AND
+mapped_activity_rollup_level_2='New Hire Enrollment' AND
+is_no_coverage_option=0 AND
+dwh_plan_brand_code='HSA' AND
+enrolled_plan_year='2022'));

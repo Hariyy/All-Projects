@@ -1,0 +1,59 @@
+Numbers from LOA Data-
+starting count for STD - 23413
+after removing unwanted rows- 23132
+Distinct count of PID-23132
+Distinct Count of client_id -131
+
+________________________________________________________________________________________________
+Numbers using below sql code in Hue Prod-
+Total Rows: 40666
+Distinctcount of PID - 40529
+Distinct Count of cpid (ClientId+PID)- 40666
+Distinct Count of Client ID - 92
+
+________________________________________________________________________________________________
+SQL Code for STD:-
+
+SELECT count(*) FROM (SELECT idm.platforminternalid as person_internal_id
+,client_id
+,udp_global_id
+,(2022 - CAST(SUBSTRING(birthdate,1,4) AS INT)) AS age
+,ppt.gender
+,ppt.marital_status
+,is_union
+,primary_language_code
+,country_description
+,ppt.state
+,ppt.platform_indicator_code
+,mapped_employment_status_code
+,mapped_employment_status_description
+,mapped_fullpart_code
+,mapped_fullpart_description
+,mapped_permanent_temporary_code
+,mapped_permanent_temporary_description
+,mapped_hourly_salary_code
+,mapped_hourly_salary_description
+,subsidiary_code
+,subsidiary_description
+,mapped_flex_status_code
+,mapped_flex_status_description
+,original_hire_date
+,rehire_date
+,is_rehire
+,termination_date
+,base_pay_regular_payrate_amount
+,base_pay_regular_frequency_code
+,base_pay_regular_frequency_description
+,base_pay_regular_expectedannualsalary
+,base_pay_regular_expectedannualsalary_range
+,annual_benefits_base_rate
+FROM edh_analytic_solutions_db.participant_integrated ppt
+JOIN edh_analytic_solutions_db.udp_person_idmapping idm
+ON ppt.udp_global_id = idm.globalpersonidentifier
+AND ppt.client_id = CAST(idm.normalizedclientid AS INT)
+where mapped_employment_status_code in (
+'STD', 
+'LOA - STD'
+)
+GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33)
+AS STD;

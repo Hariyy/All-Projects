@@ -1,0 +1,31 @@
+1. Kyle will put HRQ data stuff in s3, we need to pull from it.
+2. Join HRQ and demographics data
+3. postal code is same as zip code (5 digits code, +4 digits after it), most part it is just zip
+4. Mike is pulling postal code extensions in demographic files
+5. We need to perform clustering 
+6. After clustering, use clusters as target label and run an algorithm either rf and xgb and  pull shap values to understand feature importance
+7. Take 2020 data, if data is not available for 2020 then go for 2019.
+8. Experiment with both option, clustering first or joining first.
+9. Trying to assign risk scores based on clusters
+10. We can start with 5 clusters and then edit accordingly
+11. Need to do scalling before clustering
+12. HRQ is Agency for Healthcare Research and Quality
+13. SDoH- Social Determinants of Health Database
+14. Heath outcomes and health care quality we need to focus at first and then can include insurance later
+15. Zip code 2020 is not available, we can work with 2019 zip code but it have handful of variables
+16. Need to check if county data is available, but as per Mike it is not and a way for that is we can join zip code data with county as it is one to one join and later can join demo data with it. 
+
+Observations-
+- County unique rows in participant integrated- 531389
+- 32 Variables are available for domain Healthcare context in ZIPCODE SDOH 2020 data, 
+- That too for only three of the topics which are-
+- Health insurance status (25 variables)
+- Characteristics of health care facilities (7 variables)
+- Distance to provider (1 variable)
+- 40 Variables are available for domain Healthcare context in ZIPCODE SDOH 2019 data,
+- Topics for which variables are available
+- Characteristics of health care facilities (7 variables)
+- Health Outcomes (24 variables)
+- Health Behaviors (4 variables)
+- Health insurance status (5 variables)
+

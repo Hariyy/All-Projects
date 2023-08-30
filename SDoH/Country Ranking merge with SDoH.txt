@@ -1,0 +1,40 @@
+# Read FIPS to Zip code mappings
+# Source:https://www.kaggle.com/datasets/danofer/zipcodes-county-fips-crosswalk
+FIPSZipMap = pd.read_csv("ZIP-COUNTY-FIPS_2017-06.csv")
+
+# Convert zip code to 5 digits
+FIPSZipMap["postal_code"] = FIPSZipMap["postal_code"].apply(
+    lambda x: "{0:0>5}".format(x)
+)
+
+FIPSZipMap = FIPSZipMap[["postal_code", "FIPS"]].copy()
+
+
+# Read Food insecurity data from County Health Ranking
+# Source: https://www.countyhealthrankings.org/explore-health-rankings/rankings-data-documentation
+CountyHealthRank = pd.read_csv("County Health Ranking Food Insecurity data.csv")
+CountyHealthRank = CountyHealthRank[
+    ["FIPS", "% Food Insecure", "% Limited Access to Healthy Foods"]
+].copy()
+
+#Merge County Ranking and FIPS-Zipcode mapping file by FIPS
+FoodRank = pd.merge(CountyHealthRank, FIPSZipMap, on=["FIPS"], how="left",)
+
+
+FoodRank = FoodRank[
+    ["postal_code", "% Food Insecure", "% Limited Access to Healthy Foods"]
+].copy()
+
+FoodRank = FoodRank[FoodRank.postal_code.notnull()]
+
+
+FoodRank.loc[
+    FoodRank["% Limited Access to Healthy Foods"].isnull(),
+    "% Limited Access to Healthy Foods",
+] = FoodRank["% Limited Access to Healthy Foods"].median()
+
+FoodRank = (
+    FoodRank.groupby(["postal_code"])
+    .agg({"% Food Insecure": "mean", "% Limited Access to Healthy Foods": "mean"})
+    .reset_index()
+)

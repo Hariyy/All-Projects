@@ -1,0 +1,14 @@
+- Notes of Health Literacy final file that is used
+
+1. 2019 file was downloaded from SDoH Database
+2. A new subset was created with only Health variables 
+3. PCA was performed on the subset
+4. PCA components till 80% variance were selected (Total 11)
+5. Correraltion matrix was created
+6. Absoulte sum of all the pca components wrt to each variabl was taken
+7. Arranged in Descending order
+8. This file was sent to Kyle
+9. Kyle provided a list of Ascending and Descending variables
+10. The file provided by Kyle was used by Harish to do percentile evaluation and conversion to scores.
+11. Final data was merged with demographics data on Zipcode
+12. Final file was shared back to Kyle
